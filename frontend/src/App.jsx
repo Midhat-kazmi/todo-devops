@@ -27,7 +27,7 @@ function App() {
 
   return (
     <div style={{ fontFamily: 'Arial', maxWidth: '500px', margin: '50px auto', padding: '0 20px' }}>
-      <h1>📝 My Todo App</h1>
+      <h1> My Todo App</h1>
 
       <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
         <input
