@@ -1,22 +1,22 @@
 const express = require('express');
 const cors = require('cors');
-const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const { S3Client } = require('@aws-sdk/client-s3');
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configure AWS
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
+// Configure AWS S3 Client (v3)
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
 });
-
-const s3 = new AWS.S3();
 
 // Configure multer to upload to S3
 const upload = multer({
@@ -34,12 +34,10 @@ let todos = [
   { id: 2, text: 'Deploy my first app', done: false, image: null }
 ];
 
-// Get all todos
 app.get('/api/todos', (req, res) => {
   res.json(todos);
 });
 
-// Add todo with optional image
 app.post('/api/todos', upload.single('image'), (req, res) => {
   const todo = {
     id: Date.now(),
